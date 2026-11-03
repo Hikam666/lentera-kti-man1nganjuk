@@ -346,7 +346,7 @@ def build_pdf(filename="Panduan_Penggunaan_Aplikasi_Lentera_KTI_MAN1Nganjuk.pdf"
     story.append(Paragraph("4. <b>Efektivitas Penggunaan Bahasa:</b> Menguji 3 kriteria bahasa ilmiah:", bullet))
     story.append(Paragraph("&nbsp;&nbsp;&nbsp;&nbsp;a. <i>Jelas &amp; Objektif:</i> Mendeteksi kata informal (<i>gue, aku, banget</i>) dan ungkapan subjektif (<i>menurut saya</i>).", bullet))
     story.append(Paragraph("&nbsp;&nbsp;&nbsp;&nbsp;b. <i>Kalimat Efektif:</i> Mendeteksi pleonasme (<i>agar supaya, adalah merupakan</i>) dan kalimat terlalu panjang (>32 kata).", bullet))
-    story.append(Paragraph("&nbsp;&nbsp;&nbsp;&nbsp;c. <i>Ejaan EYD V:</i> Mendeteksi singkatan tidak baku (<i>yg, dgn, tdk</i>) dan tanda desimal titik.", bullet))
+    story.append(Paragraph("&nbsp;&nbsp;&nbsp;&nbsp;c. <i>Ejaan EYD V:</i> Mendeteksi singkatan tidak baku (<i>yg, dgn, tdk</i>) dan tanda desimal titik pada bilangan kuantitatif (misal <i>3,5%</i> bukan <i>3.5%</i>). <b>Catatan:</b> Tautan URL website, DOI (<i>10.xxxx/...</i>), dan nomor subbab (<i>1.1</i>) otomatis dikecualikan agar alamat tautan tidak rusak.", bullet))
 
     story.append(Paragraph("2.4 Mengunduh Hasil Analisis", h2))
     story.append(Paragraph(
@@ -380,7 +380,7 @@ def build_pdf(filename="Panduan_Penggunaan_Aplikasi_Lentera_KTI_MAN1Nganjuk.pdf"
         ("10. Hipotesis", "Opsional (dapat dikosongkan untuk penelitian kualitatif deskriptif)."),
         ("11. Metode Riset", "Maks. 750 kata. Memuat 4 subkomponen: jenis riset, pendekatan, teknik pengumpulan, dan rencana analisis data."),
         ("12. Jadwal, Lokasi & Anggaran", "Rincian lokasi penelitian, jadwal pelaksanaan riset, dan estimasi biaya."),
-        ("13. Daftar Pustaka Sementara", "Minimal 2 entri sumber rujukan bergaya APA 7th dengan tahun dalam kurung.")
+        ("13. Daftar Pustaka Sementara", "Minimal 2 entri sumber rujukan bergaya APA 7th dengan tahun dalam tanda kurung, misal (2020) atau (t.t.). Mendukung format multibaris secara otomatis.")
     ]
     for s_title, s_desc in steps_data:
         story.append(Paragraph(f"• <b>{s_title}:</b> {s_desc}", bullet))

@@ -27,6 +27,37 @@ export function escapeHtml(s: string): string {
     .replace(/>/g, '&gt;');
 }
 
+/**
+ * Mendeteksi kesalahan penulisan desimal dengan tanda titik pada teks bahasa Indonesia.
+ * Otomatis MENGABAIKAN:
+ * 1. Tautan URL (http, https, www)
+ * 2. Tautan DOI (10.xxxx/xxxx, doi: xxxx)
+ * 3. Penomoran subbab / outline (1.1, 2.3.1, dsb.)
+ * 4. Metadata volume/nomor jurnal (Vol. 4. No. 2, hlm. 12-18)
+ * 5. Penomoran gambar/tabel/lampiran
+ */
+export function detectDecimalErrors(clean: string): string[] {
+  // 1. Hapus URL dan web links
+  let text = clean.replace(/https?:\/\/[^\s)\]]+/gi, '');
+  text = text.replace(/\bwww\.[^\s)\]]+/gi, '');
+  text = text.replace(/\bdoi:\s*[^\s)\]]+/gi, '');
+  text = text.replace(/\b10\.\d{4,9}\/[^\s)\]]+/gi, '');
+
+  // 2. Hapus referensi volume, nomor, halaman jurnal
+  text = text.replace(/\b(?:vol|no|hlm|pp|hal)\.\s*\d+(?:\.\d+)*/gi, '');
+
+  // 3. Hapus penomoran subbab bertingkat (1.1.1, 2.3.1, dll)
+  text = text.replace(/\b\d+\.\d+\.\d+(?:\.\d+)*\b/g, '');
+
+  // 4. Hapus penomoran subbab bab utama (misal '1.1 Latar Belakang' atau '2.1 Kajian')
+  text = text.replace(/(?:^|[\r\n\s])\d+\.\d+\s+[A-ZÀ-ÿ]/g, ' ');
+  text = text.replace(/\b(?:subbab|bab|pasal|gambar|tabel|grafik|lampiran)\s+\d+\.\d+\b/gi, '');
+
+  // 5. Temukan sisa bilangan desimal kuantitatif dengan titik (contoh: 85.5, 3.5%, 0.05)
+  const matches = text.match(/(?<![A-Za-z0-9_\/])(\d+\.\d{1,4})(?![A-Za-z0-9_\/])/g) || [];
+  return matches;
+}
+
 export function assessBahasa(text?: string): BahasaAssessment {
   const clean = text || '';
   const lower = clean.toLowerCase();
@@ -58,13 +89,18 @@ export function assessBahasa(text?: string): BahasaAssessment {
   const abbrHits = NONBAKU_ABBR.filter(w =>
     new RegExp('\\b' + w + '\\b', 'i').test(clean)
   );
-  const decimalIssue = /\d+\.\d+/.test(clean);
+  const decimalMatches = detectDecimalErrors(clean);
+  const decimalIssue = decimalMatches.length > 0;
   const eydPass = abbrHits.length === 0 && !decimalIssue;
-  const eydNote = abbrHits.length > 0
-    ? `Ditemukan singkatan tidak baku (${abbrHits.join(', ')}); tulis kata secara lengkap sesuai kaidah EYD Edisi V.`
-    : (decimalIssue
-        ? 'Ditemukan penulisan bilangan desimal dengan tanda titik; gunakan tanda koma untuk bilangan desimal sesuai kaidah EYD Edisi V (misalnya 3,5 bukan 3.5).'
-        : 'Tidak ditemukan singkatan tidak baku atau kesalahan umum penulisan bilangan; ejaan cenderung sesuai kaidah EYD Edisi V.');
+
+  let eydNote = 'Tidak ditemukan singkatan tidak baku atau kesalahan penulisan bilangan desimal; ejaan cenderung sesuai kaidah EYD Edisi V.';
+  if (abbrHits.length > 0 && decimalIssue) {
+    eydNote = `Ditemukan singkatan tidak baku (${abbrHits.join(', ')}) dan penulisan desimal kuantitatif dengan tanda titik (${decimalMatches.slice(0, 3).join(', ')}); tulis kata secara lengkap dan gunakan tanda koma untuk desimal sesuai EYD V (misal 3,5 bukan 3.5). Tautan link/DOI dan nomor subbab tidak terpengaruh kaidah ini.`;
+  } else if (abbrHits.length > 0) {
+    eydNote = `Ditemukan singkatan tidak baku (${abbrHits.join(', ')}); tulis kata secara lengkap sesuai kaidah EYD Edisi V.`;
+  } else if (decimalIssue) {
+    eydNote = `Ditemukan penulisan bilangan desimal kuantitatif dengan tanda titik (${decimalMatches.slice(0, 3).join(', ')}); gunakan tanda koma untuk bilangan desimal kuantitatif sesuai kaidah EYD Edisi V (misalnya 3,5 bukan 3.5). Catatan: Tautan URL web, DOI, dan penomoran subbab (1.1) tidak terpengaruh kaidah ini.`;
+  }
 
   const passCount = [objektifPass, efektifPass, eydPass].filter(Boolean).length;
   let status: BahasaAssessment['status'] = 'Perlu Ditingkatkan';
@@ -94,12 +130,15 @@ export function tokenizeWithOffsets(text: string) {
   let m: RegExpExecArray | null;
   const tokens: { word: string; start: number; end: number; norm: string }[] = [];
   while ((m = re.exec(text)) !== null) {
-    tokens.push({
-      word: m[0],
-      start: m.index,
-      end: m.index + m[0].length,
-      norm: m[0].toLowerCase().replace(/[^\wà-ÿ]/g, '')
-    });
+    const norm = m[0].toLowerCase().replace(/[^\wà-ÿ]/g, '');
+    if (norm.length > 0) {
+      tokens.push({
+        word: m[0],
+        start: m.index,
+        end: m.index + m[0].length,
+        norm
+      });
+    }
   }
   return tokens;
 }
@@ -303,7 +342,8 @@ export function kbcTemplate(v: KbcValueItem, mode: 'latar' | 'pembahasan'): stri
 }
 
 export function downloadTextFile(filename: string, content: string): void {
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  // Menambahkan UTF-8 BOM (\uFEFF) agar berkas teks terbuka rapi di Windows Notepad & MS Word
+  const blob = new Blob(['\uFEFF' + content], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

@@ -154,8 +154,15 @@ export const AnalisisView: React.FC = () => {
     // 7. Keselarasan Rumusan Masalah BAB I vs Pembahasan BAB IV / BAB V
     let rumusanText = '';
     if (segments['bab1']) {
-      const m = segments['bab1'].match(/rumusan masalah[^?]*\?/i);
-      if (m) rumusanText = m[0];
+      const m = segments['bab1'].match(/(?:rumusan masalah|pertanyaan penelitian)[^?]*\?/i);
+      if (m) {
+        rumusanText = m[0];
+      } else {
+        const qMatches = segments['bab1'].match(/[^.!?\n]+(?:\?)/g);
+        if (qMatches && qMatches.length > 0) {
+          rumusanText = qMatches.join(' ');
+        }
+      }
     }
     const pembahasanGabungan = (segments['bab4'] || '') + ' ' + (segments['bab5'] || '');
     const overlapWords = rumusanText ? keywordOverlap(rumusanText, pembahasanGabungan, 5) : [];

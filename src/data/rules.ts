@@ -28,8 +28,10 @@ export const NONBAKU_ABBR = [
   'yg', 'dgn', 'tdk', 'krn', 'utk', 'dr', 'sdh', 'blm', 'jd', 'klo', 'kalo', 'dpt', 'spy'
 ];
 
-export const APA_PAREN_RE = /\([A-Z][a-zA-ZÀ-ÿ\-]+(?:,?\s(?:&|dan)\s[A-Z][a-zA-ZÀ-ÿ\-]+)?(?:\set al\.)?,\s*(?:\d{4}|n\.d\.)(?:,\s*(?:hlm\.|p\.)\s*\d+)?\)/g;
-export const APA_NARR_RE = /[A-Z][a-zA-ZÀ-ÿ\-]+(?:\set al\.)?\s\((?:\d{4}|n\.d\.)\)/g;
+// Standar Sitasi APA Edisi Ke-7 (Parentetikal & Naratif)
+// Mendukung: 1 penulis, 2 penulis (& / dan), >=3 penulis (dkk. / et al.), nama dengan spasi/hyphen, dan tanpa tahun (t.t. / n.d.)
+export const APA_PAREN_RE = /\(([A-Z][a-zA-Z0-9À-ÿ\s,&.'-]+?),\s*(\d{4}[a-z]?|n\.d\.|t\.t\.)(?:(?:,\s*(?:hlm\.|p\.|hal\.)\s*|\s*:\s*)\d+(?:-\d+)?)?\)/g;
+export const APA_NARR_RE = /\b([A-Z][a-zA-Z0-9À-ÿ.'-]+(?:\s+(?:et\s+al\.|dkk\.))?)\s*\(\s*(\d{4}[a-z]?|n\.d\.|t\.t\.)\s*\)/g;
 
 export const KBC_VALUES: KbcValueItem[] = [
   {
@@ -87,7 +89,7 @@ export const KBC_LINK_RE = /sejalan dengan|selaras dengan|sesuai dengan|wujud ny
 export const KBC_RES_RE = /hasil|temuan|peningkatan|meningkat|menunjukkan|data|penerapan|efektif|pengaruh|riset ini|penelitian ini|capaian|skor/i;
 
 export const SAMPLE_PAPER = `BAB I PENDAHULUAN
-Transformasi digital mendorong murid untuk menguasai keterampilan berpikir komputasional yang relevan dengan kebutuhan abad ke-21. Kondisi ini terlihat dari meningkatnya penggunaan aplikasi pembelajaran interaktif di berbagai jenjang pendidikan (Hidayat, 2021). Berdasarkan survei awal, sekitar 55% murid kelas XI belum terbiasa menyelesaikan masalah secara sistematis. Kesenjangan ini menjadi masalah karena kemampuan tersebut menjadi dasar literasi digital. Penelitian terdahulu oleh Agustini et al. (2024) menunjukkan bahwa game edukasi mampu meningkatkan keterampilan berpikir komputasi murid. Oleh karena itu, riset ini penting dilakukan untuk mengembangkan media pembelajaran berbasis game yang mengintegrasikan kearifan lokal. Upaya ini sejalan dengan nilai Cinta Ilmu dalam Kurikulum Berbasis Cinta (KBC), yaitu semangat menuntut ilmu sebagai sarana memahami keagungan penciptaan Allah SWT serta melatih murid menjadi pembelajar sepanjang hayat yang memanfaatkan teknologi secara bijak (lihat Lampiran 7).
+Transformasi digital mendorong murid untuk menguasai keterampilan berpikir komputasional yang relevan dengan kebutuhan abad ke-21. Kondisi ini terlihat dari meningkatnya penggunaan aplikasi pembelajaran interaktif di berbagai jenjang pendidikan (Hidayat, 2021). Berdasarkan survei awal, sekitar 55% murid kelas XI belum terbiasa menyelesaikan masalah secara sistematis. Kesenjangan ini menjadi masalah karena kemampuan tersebut menjadi dasar literasi digital. Penelitian terdahulu oleh Agustini dkk. (2024) menunjukkan bahwa game edukasi mampu meningkatkan keterampilan berpikir komputasi murid. Oleh karena itu, riset ini penting dilakukan untuk mengembangkan media pembelajaran berbasis game yang mengintegrasikan kearifan lokal. Upaya ini sejalan dengan nilai Cinta Ilmu dalam Kurikulum Berbasis Cinta (KBC), yaitu semangat menuntut ilmu sebagai sarana memahami keagungan penciptaan Allah SWT serta melatih murid menjadi pembelajar sepanjang hayat yang memanfaatkan teknologi secara bijak (lihat Lampiran 7).
 
 Rumusan masalah dalam riset ini adalah bagaimana efektivitas media game edukasi terhadap kemampuan berpikir komputasional murid kelas XI? Tujuan riset ini adalah untuk mendeskripsikan efektivitas media game edukasi terhadap kemampuan berpikir komputasional murid kelas XI.
 
@@ -98,7 +100,7 @@ BAB III METODE RISET
 Jenis riset yang digunakan adalah Research and Development (R&D). Pendekatan riset menggunakan model ADDIE. Teknik dan alat pengumpul data berupa angket dan observasi terhadap 60 murid kelas XI. Rencana analisis data menggunakan pendekatan campuran kualitatif dan kuantitatif untuk mengukur peningkatan kemampuan berpikir komputasional.
 
 BAB IV HASIL DAN PEMBAHASAN
-Hasil riset menunjukkan bahwa murid yang menggunakan media game edukasi mengalami peningkatan kemampuan berpikir komputasional dibandingkan sebelum perlakuan. Berdasarkan hasil analisis data, rata-rata skor pascates lebih tinggi dibandingkan skor prates. Temuan ini sejalan dengan Agustini et al. (2024) yang menyatakan bahwa game berbasis masalah efektif melatih keterampilan berpikir sistematis. Peningkatan ini menegaskan bahwa pembelajaran berbasis game merupakan wujud nyata dari nilai Cinta Ilmu sebagaimana ditegaskan dalam KBC: ilmu menjadi jalan bagi murid untuk mengenal kebesaran ciptaan Allah SWT dan menumbuhkan sikap pembelajar yang tekun, kreatif, serta bertanggung jawab dalam memanfaatkan teknologi (lihat Lampiran 7).
+Hasil riset menunjukkan bahwa murid yang menggunakan media game edukasi mengalami peningkatan kemampuan berpikir komputasional dibandingkan sebelum perlakuan. Berdasarkan hasil analisis data, rata-rata skor pascates lebih tinggi dibandingkan skor prates. Temuan ini sejalan dengan Agustini dkk. (2024) yang menyatakan bahwa game berbasis masalah efektif melatih keterampilan berpikir sistematis. Peningkatan ini menegaskan bahwa pembelajaran berbasis game merupakan wujud nyata dari nilai Cinta Ilmu sebagaimana ditegaskan dalam KBC: ilmu menjadi jalan bagi murid untuk mengenal kebesaran ciptaan Allah SWT dan menumbuhkan sikap pembelajar yang tekun, kreatif, serta bertanggung jawab dalam memanfaatkan teknologi (lihat Lampiran 7).
 
 BAB V PENUTUP
 Simpulan riset ini adalah media game edukasi efektif meningkatkan kemampuan berpikir komputasional murid kelas XI. Saran yang dapat diberikan adalah pengembangan lebih lanjut pada aspek kearifan lokal lain di Kabupaten Nganjuk.
@@ -214,7 +216,7 @@ export const PROPOSAL_STEPS: StepDefinition[] = [
       if (wc === 0) return null;
       if (wc > 350) return `Melebihi batas 350 kata (${wc} kata).`;
       const hasCit = APA_PAREN_RE.test(v) || APA_NARR_RE.test(v);
-      return hasCit ? null : 'Sertakan sitasi APA, misalnya (Nama, Tahun).';
+      return hasCit ? null : 'Sertakan sitasi APA, misalnya (Nama, Tahun) atau Nama (Tahun).';
     }
   },
   {
@@ -269,13 +271,50 @@ export const PROPOSAL_STEPS: StepDefinition[] = [
   {
     key: 'daftarpustaka',
     title: 'Daftar Pustaka Sementara',
-    hint: 'Gaya APA Edisi Ke-7, minimal dua sumber, satu entri per baris.',
+    hint: 'Gaya APA Edisi Ke-7, minimal dua sumber rujukan.',
     validate: (v) => {
-      if (!v.trim()) return null;
-      const lines = v.split('\n').map(x => x.trim()).filter(Boolean);
-      if (lines.length < 2) return 'Cantumkan minimal dua sumber rujukan.';
-      const bad = lines.filter(l => !/\(\d{4}[a-z]?\)|\(n\.d\.\)/.test(l));
-      return bad.length ? 'Setiap entri harus memuat tahun terbit dalam kurung, misalnya (2020), sesuai gaya APA.' : null;
+      const text = (v || '').trim();
+      if (!text) return null;
+
+      // Parse multiline reference entries accurately
+      // Supports entries separated by double-newline, single-newline hanging lines, or numbers
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      const entries: string[] = [];
+      let currentEntry = '';
+      const YEAR_PATTERN = /\(\s*(?:\d{4}[a-z]?|[tT]\.[tT]\.|[nN]\.[dD]\.)[^)]*\)/;
+
+      for (const line of lines) {
+        let isNew = false;
+        if (!currentEntry) {
+          isNew = true;
+        } else if (/^(?:[0-9]+[\.\)]|[-*•])\s*/.test(line)) {
+          isNew = true;
+        } else if (YEAR_PATTERN.test(line) && !YEAR_PATTERN.test(currentEntry)) {
+          isNew = false;
+        } else if (YEAR_PATTERN.test(line) && YEAR_PATTERN.test(currentEntry)) {
+          isNew = true;
+        }
+
+        if (isNew && currentEntry) {
+          entries.push(currentEntry);
+          currentEntry = line;
+        } else {
+          currentEntry = currentEntry ? `${currentEntry} ${line}` : line;
+        }
+      }
+      if (currentEntry) entries.push(currentEntry);
+
+      if (entries.length < 2) {
+        return 'Cantumkan minimal dua sumber rujukan.';
+      }
+
+      const missingYear = entries.filter(e => !YEAR_PATTERN.test(e));
+      if (missingYear.length > 0) {
+        const sampleSnippet = missingYear[0].substring(0, 30);
+        return `Entri rujukan "${sampleSnippet}..." belum memuat tahun terbit dalam kurung, misalnya (2020) atau (t.t.). Pastikan tahun ditaruh di dalam tanda kurung sesuai gaya APA.`;
+      }
+
+      return null;
     }
   },
 ];
